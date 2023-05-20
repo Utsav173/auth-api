@@ -16,6 +16,11 @@ module.exports = {
       return res.badRequest("email, password and name are required");
     }
     try {
+
+      const isExist = await User.findOne({ email: req.body.email });
+      if (isExist) {
+        return res.badRequest("email already exists");
+      }
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const user = await User.create({
         email: req.body.email,
